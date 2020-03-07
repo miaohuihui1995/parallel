@@ -29,14 +29,12 @@ void PrinttoFile(double *x, int N){
         int i;
         FILE *fp;
         fp = fopen("x1.txt", "w+");
-	fprintf(fp, "%d", N);
         for(i = 0; i < N; i++){
                 fprintf(fp, "%f", x[i]);
         }
 	fclose(fp);
 
         fp = fopen("x.bin", "wb");
-	fwrite(&N, sizeof(int), 1, fp);
         fwrite(x, sizeof(double), N, fp);
 	fclose(fp);
 	fp = NULL;
@@ -52,7 +50,7 @@ double dot(double *a, double *b, int N){
 	return sum;
 }
 
-double *axpby(double *a, double *b, int N, int m, int n){
+double *axpby(double *a, double *b, int N, double m, double n){
 
 	int i;
 	for(i = 0; i < N; i++){
