@@ -1,2 +1,2 @@
 # parallel
-OpenMP MPI Pthread
+OpenMP MPI Pthread OpenCL
