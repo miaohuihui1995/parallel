@@ -1,0 +1,376 @@
+cl_int clGetPlatformInfo(cl_platform_id platfom,
+                         cl_platform_info param_name,
+                         size_t param_value_size,
+                         void *param_value,
+                         size_t *param_value_size_ret)
+platform即clGetPlatformIDs所返回的平台ID，指明要查询那个平台，也可以是NULL，如果是NULL，其行为依赖于具体操作。
+param_name是一个枚举常量指明要查询什么信息。
+param_value是一个指针，所指内存用来存储param_name所对应的信息，如果是NULL，则忽略。
+param_value_size即param_value所指内存块的大小（单位：字节），其值要大于等于下表中的返回类型的大小。
+param_value_size_ret返回所查询信息的实际大小。如果是NULL，则忽略。
+如果执行成功，clGetPlatformInfo会返回CL_SUCCESS。否则，返回下面错误之一：
+	CL_INVALID_PLATFORM,  platform无效
+	CL_INVALID_VALUE, 如果param_name不是所支持的值，或者param_size_value的返回值小于表中的返回值的大小，且param_value不为NULL
+	CL_OUT_OF_HOST_MEMORY ,在主机上为opencl操作分配内存失败
+当查询所需要的信息的时候，可以把param_name和param_value的值分别置为0和NULL来查询返回值的大小。然后分配相应的内存大小，再调用函数把信息写入到所分配的内存中。
+*************************************************************************************
+cl_int clGetPlatformIDs(cl_uint num_entries, 
+                        cl_platform_id *platforms,
+                        cl_uint *num_platforms)
+num_entries是platforms中可以容纳的cl_platform_id表项的数目。如果platform不是NULL，那么num_entries必须大于零。
+platforms返回所找到的OpenCL平台清单。platforms中的每个cl_platform_id都用来标识某个特定的OpenCL平台。如果platforms是NULL，则被忽略。所返回的OpenCL平台的数目是num_entries和实际数目中较小的那一个。 
+num_platforms返回实际可用的OpenCL平台数目。如果num_Platforms为NULL，则被忽略。
+如果函数执行成功，clGetPlatformIDs会返回CL_SUCCESS。否则返回下面的错误
+	CL_INVALID_VALUE        如果num_entries是0，而且platforms不为NULL；或则两者都是NULL
+	CL_OUT_OF_HOST_MEMORY    在主机上为OpenCL平台分配内存空间失败
+*************************************************************************************
+cl_int clGetDeviceInfo(cl_device_id device, 
+                       cl_device_info param_name, 
+                       size_t param_value_size,
+                       void *param_value,
+                       size_t param_value_size_ret)
+这个函数的基本用发和上面的clGetPlatformInfo的用法是一样的。参照上面的clGetPlatformInfo来使用。
+惟一的不同就是cl_device_info有好多中不同的信息参数。
+*************************************************************************************
+cl_int clGetDeviceIDs(cl_platform_id platform,
+                      cl_device_type device_type,
+                      cl_uint num_entries,
+                      cl_device_id *devices,
+                      cl_uint *num_devices)
+platform即 clGetPlatformIDs所返回的平台id，也可能是NULL，如果是NULL，则行为依赖于具体的操作。
+device_type是位域，用来标识OpenCL设备的类型。也可以用来查询某种OpenCL设备，也可以查询所有的设备。
+num_entries是devices中能容纳的cl_device_id表项的数目。如果devices不为NULL，则num_entries必须大于零。
+devices用来返回可用的OpenCL设备。devices中返回的cl_device_id用来标识一个OpenCL设备。如果devices为NULL，则忽略。所返回的OpenCL设备数目为num_entries和符合device_type类型的设备的数目的最小值。
+num_devices返回符合device_type的所有的OpenCL设备的数目。如果num_devices为NULL，则忽略。
+如果函数执行成功，则clGetDeviceIDs会返回CL_SUCCESS，否则返回下面错误之一：
+	CL_INVALID_PLATFORM，platform无效。
+	CL_INVALID_DEVICE_TYPE，device_type无效。
+	CL_INVALID_VALUE，num_entries为零，但是devices不为NULL，或则两个都为NULL。
+	CL_DEVICE_NOT_FOUND，没有找到符号device_type的OpenCL设备。
+	CL_OUT_OF_RESOURCES，为设备上的OpenCL操作分配内存失败。
+	CL_OUT_OF_HOST_MEMORY，为主机上的OpenCL操作分配内存失败。
+cl_device_type:
+	CL_DEVICE_TYPE_CPU:主机处理器。OpenCL操作运行在其上，是单核或多核CPU。
+	CL_DEVICE_TYPE_GPU:GPU。这意味着设备也可以用来加速3D API。
+	CL_DEVICE_TYPE_ADDELERATOR：OpenCL专用加速器。
+	CL_DEVICE_TYPE_CUSTOM：一般专用加速器，但是不支持OpenCL C编写的程序
+	CL_DEVICE_TYPE_DEFAULT：系统中默认的OpenCL设备。不能是CL_DEVICE_TYPE_CUSTOM类型的设备。
+	CL_DEVICE_TYPE_ALL：系统中所有的OpenCL设备。不包括CL_DEVICE_TYPE_CUSTOM类型的设备。
+*************************************************************************************
+cl_int clGetContextInfo(cl_context context,
+                        cl_context_info param_name,
+                        size_t param_value_size,
+                        void *param_value,
+                        size_t *param_value_size_ret)
+context 指定要查询的OpenCL上下文。
+param_name 是枚举常量，指定要查询的信息。
+param_value 指向的内存用来存放查询的结果。如果param_value是NULL，则忽略。
+param_value_size 即param_value所指内存的大小。必须大于param_name所指定类型的大小。
+param_value_size_ret 返回param_value所存查询结果的实际字节数。如果param_value_size_ret是NULL，则忽略。
+	cl_context_info			返回类别
+	CL_CONTEXT_REFERENCE_COUNT	cl_uint
+	返回context的引用计数
+	CL_CONTEXT_NUM_DEVCIES		cl_uint
+	返回context中设备的数目
+	CL_CONTEXT_DEVCIES		cl_device_id[]
+	返回context中的设备清单
+	CL_CONTEXT_PROPERTIES		cl_context_properties[]
+	返回clCreateContext或clCreateContextFromType时所指定的参数properties。
+	对于调用 clCreateContext或clCreateContextFromType创建context时所指定的参数properties而言，如果该参数不为NULL，操作必须返回该参数的值。如果该参数不为NULL，操作可以现在把param_value_size_ret置为0,也可以把param_value的内容置为0。
+	0在上下文属性清单中是终止标记。
+该函数执行成功后，clGetContextInfo会返回CL_SUCCESS。否则，返回下列错误码之一：
+	CL_INVALID_CONTEXT， context不是一个有效的上下文。
+	CL_INVALID_VALUE， param_name的值不受支持，或者param_value_size的值小于cl_context_info中的返回类型且param_value不是NULL。
+	CL_OUT_OF_RESOURCE，为设备上的OpenCL操作分配内存失败。
+	CL_OUT_OF_HOST_MEMROY，为主机上的OpenCL操作分配内存失败。
+*************************************************************************************
+cl_context clCreateContext(const cl_context_properties *properties, 
+                           cl_uint num_entries, 
+                           const cl_device_id *devices, 
+                           void(CL_CALLBACK *pfn_notify)(const char *errinfo, 
+                                                         const void *private_info, 
+                                                         size_t cb, 
+                                                         void *user_data), 
+                           void *user_data, 
+                           cl_int *errcode_ret)
+properties指定了上下文的一系列属性名和对应的值。每个属性名后面紧跟相应的期望值。此清单以0终止。如果properties是NULL，选择那个平台依赖具体操作。
+	cl_context_properties           属性值
+	CL_CONTEXT_PLATFORM             cl_platform_id
+	指定使用那个平台。
+	CL_CONTEXT_INTEROP_USER_SYNC    cl_bool
+	OpenCL和其他API之间的同步是否由用户自己负责。如果没有指定此属性，则默认值为CL_FALSE
+num_devices是参数devices中设备的数目。
+devices指向一个设备清单，其中的设备都是惟一的，都是由clGetDeviceIDs所返回的，或者使用clCreateSubDevices创建的子设备。
+pfn_notify是应用所注册的回调函数。对于此上下文，无论创建时还是运行时，只要发生了错误，OpenCL的操作都会调用此函数，但调用可能是异步的。应用需要保证此函数是线程安全的。这个回调函数的参数是：
+	errinfo    	指向一个错误字符串
+	private_info 	指向一块二进制数据，其大小为cb，这块数据由OpenCL操作所返回，可以用来记录一些附加资讯来帮助调试错误。
+	user_data	指向用户提供的数据
+如果pfn_notify是NULL，则表示不注册回调函数。
+user_data会在调用pfn_notify时作为参数user_data使用。user_data可以是NULL。
+errcode_ret是用来返回相应的错误码。如果errcode_ret是NULL，则不会返回错误码。
+如果成功创建了上下文，clCreateContext会将其返回(非零)，并将errcode_ret置为CL_SUCCESS。否则返回NULL，并将errcode_ret置为下面错误吗之一：
+	CL_INVALID_PLATFORM，properties是NULL且没有可选的平台，或者properties中的平台无效。
+	CL_INVALID_PROPERTY，properties中的属性名不受支持，或者支持此属性但是其值无效，或者同一属性名出现多次。
+	CL_INVALID_VALUE， devices是NULL，或者num_devices等于0，或者pfn_notify是NULL但是user_data不是NULL。
+	CL_INVALID_DEVICE，devices中有无效的设备
+	CL_DEVICE_NOT_AVAILABLE，devices中的某个设备当前不可用，即使该设备是由clGetDeviceIDs返回的。
+	CL_OUT_OF_RESOURCES，为设备上的OpenCL操作分为内存失败。
+	CL_OUT_OF_HOST_MEMORY，为主机上的OpenCL操作分配内存失败。
+*************************************************************************************
+cl_context clCreateContextFromType(const cl_context_properties *properties,
+                                   cl_device_type device_type,
+                                   void(CL_CALLBACK *pin_notify)(const char *errinfo,
+								 const void *private_info,
+								 size_t cb,
+								 void *user_data),
+				   void *user_data,
+				   cl_int *errcode_ret)
+函数clCreateContexFromType会由特定类型的设备创建一个OpenCL上下文，此上下文不会引用这些设备所创建的子设备。
+properties和clCreateContext中一样。
+devcie_type是位段，用来标志设备类型。类型见上面的cl_device_type。
+pfn_notify和user_data跟clCreateContext中所描述的是一样的。
+errcode_ret用来返回相应的错误码，如果errcode_ret是NULL，则不返回错误码。
+跟clCreateContext错误码不同的是：
+	CL_INVALID_DEVCIE_TYPE，device_type的值是无效的。
+	CL_DEVCIE_NOT_AVALIABLE，当前没用同时符合device_type以及properties中属性值的设备可用。
+	CL_DEVICE_NOT_FOUND，没有找到同时符合device_type以及properties中的属性值的设备。
+*************************************************************************************
+cl_int clGetCommadQueueInfo(cl_command_queue command_queue,
+			    cl_command_queue_info param_name,
+			    size_t param_value_size,
+			    void *param_value,
+			    size_t *param_value_size_ret)
+command_queue指定所要查询的的命令队列。
+parma_name指定所要查询的信息。
+param_value指定用来存放查询结果的内存。如果是NULL，则忽略。
+param_value_size即param_value所指项内存块的大小（字节）。其值必须大于cl_command_queue_info中所对应的类型大小。
+param_value_size_ret会返回查询结果的实际大小。如果是NULL，则忽略。
+clGetCommandQueueInfo所支持的param_name
+	cl_command_queue_info		返回类型
+	CL_QUEUE_CONTEXT		cl_context
+	返回创建命令队列时所执行的上下文。
+	CL_QUEUE_DEVICE			cl_device_id
+	返回创建命令队列时所指定的设备。
+	CL_QUEUE_REFERENCE_COUNT	cl_uint
+	返回命令队列的引用计数
+	CL_QUEUE_PROPERTIES		cl_command_queue_properties
+	返回命令队列当前的属性。
+*************************************************************************************
+cl_command_queue clCreateCommandQueue(cl_context context,
+				      cl_device_id device,
+				      cl_command_queue_properties properties,
+				      cl_int *errcode_ret)
+clCreateCommandQueue就是用来在某个设备上创建命令队列。
+context必须是一个有效的OpenCL上下文。
+device 必须是与context关联的设备。必须是clCreateContext或者clCreateContextFromType中相应的设备类型。
+properties指定了命令队列的一系列属性，它是位段。其值参见下表
+errcode_ret用来返回错误吗。如果errcode_ret是NULL，就不返回错误码。
+命令队列属性
+	CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE
+	用来确定命令队列中的命令是顺序执行还是乱序执行。如果设置了此属性，就乱序执行。否则顺序执行。
+	CL_QUEUE_PROFILING_ENABLE
+	设置对命令队列中命令的评测。如果设置了此项，则设置了评测。反之则没有设置。
+如果成功创建了命令队列，clCreateCommandQueue会将其返回，同时把errcode_ret置为CL_SUCCESS。否则返回NULL，同时将errcode_ret置为下面的错误码之一：
+	CL_INVALID_CONTEXT，context无效。
+	CL_INVALID_DEVICE，无效的device或者device未与context关联。
+	CL_INVALID_VALUE，properties的值无效。
+	CL_INVVALID_QUEUE_PROPERTIES，properties本身没有问题，但是device不支持。
+	CL_OUT_OF_RESOURCES，为设备上的OpenCL操作分配内存是失败。
+	CL_OUT_OF_HOST_MEMORY，为主机上的OpenCL操作分配内存失败。
+*************************************************************************************
+cl_int clReleaseCommandQueue(cl_command_queue command_queue)
+此函数会使command_queuq的引用计数减一。
+如果执行成功，返回CL_SUCCESS。否者返回下面错误码之一：
+	CL_INVALID_COMMAND_QUEUE，command_queue无效。
+	CL_OUT_OF_RESOURCES，为设备上的OpenCL操作分配内存是失败。
+	CL_OUT_OF_HOST_MEMORY，为主机上的OpenCL操作分配内存失败。
+当command_queue的引用计数降为0，并且其中的所有命令全部执行完毕时，此命令队列就会被删除。
+clReleaseCommadQueue会实施隐式的刷新(flush)，会将出发所有之前入队的OpenCL命令。
+*************************************************************************************
+cl_program clCreateProgramWithSource(cl_context context,
+				     cl_uint count,
+				     const char **strings,
+				     const size_t *lengths,
+				     cl_int *errcode_ret)
+这个函数可以创建一个程序对象，并将strings中的源码装入到这个对象中。此程序对象关联的设备就是context所关联的设备。strings中的源码是OpenCL C程序源码、文档，或者是自定义的代码。
+    context 是一个OpenCL上下文。
+    strings 是一个字符串序列，有count个元素，字符串可选的以null结束。这些字符串就构成了源码。
+    lengths 也是一个序列，其中的元素代表每个字符串中的字符个数(字符串的长度）。如果某个元素是零，则相应的字符串以null终止。如果lengths是NULL，则strings中的所有字符串都已null终止。所有大于零的值都不包括null终止符。
+    errcode_ret会返回相应的错误码。如果为NULL，不返回错误码。
+如果clCreateProgramWithSource成功创建了程序对象，则返回该对象，并将errcode_ret置为CL_SUCCESS。否则返回NULL，并将errcode_ret置为下面的错误码之一：
+	CL_INVALID_CONTEXT，context无效
+	CL_INVALID_VALUE，count是零，或者strings中任一项是NULL
+	CL_DEVICE_TYPE_DEFAULT：系统中默认的OpenCL设备。不能是CL_DEVICE_TYPE_CUSTOM类型的设备。
+	CL_DEVICE_TYPE_ALL：系统中所有的OpenCL设备。不包括CL_DEVICE_TYPE_CUSTOM类型的设备。
+*************************************************************************************
+cl_int clBuildProgram(cl_program program,
+		      cl_uint num_devices,
+		      const cl_device_id *device_list,
+		      const char *options,
+		      void (CL_CALLBACK *pfn_notify)(cl_program program,
+						     void *user_data),
+						     void *user_data))
+program  是程序对象。
+device_list指向program所关联的设备。如果device_list是NULL，则会为program所关良的所有设备创建程序对象的执行体。否则，仅为此清单中的设备构建程序执行体。
+num_devices即device_list中的设备数目。
+options指向一个null终止的字符串，用来描述构建选项。
+pfn_notify是应用所注册的回调函数。在构建完程序执行体后会被调用（不论成功还是失败）。如果pfn_notify不是NULL，一旦开始构建，clBuildProgram会立刻返回，而不必等待构建完成。如果上下文、所要编译连接的函数、设备清单以及构建选项都是有效的，以及实施构建所需的主机和设备资源都可用，那么就可以开始构建了。如果pfn_notify是NULL，直到构建完毕，clBuildProgram才会返回。对此函数的调用可能是异步的。应用需要保证此函数是线程安全的。
+user_data在调用pfn_notify时作为参数传入，可以是NULL。
+如果执行成功，则clBuildProgram会返回CL_SUCCESS。否则返回下列错误码之一：
+	CL_INVALID_PROGRAM，无效的program。
+	CL_INVALID_VALUE，device_list是NULL而num_devices大于零，或者device_list不是NULL而num_devices等于零。
+	CL_INVALID_VALUE，pfn_notity是NULL，而user_data不是NULL。
+	CL_INVALID_DEVICE，device_list中的OpenCL设备不是program所关联的设备
+	CL_INVALID_BINARY，program是用clCreateProgramWithBinary所创建的，但是没有为device_list中的设备装载相应的程序二进制妈。
+	CL_INVALID_BUILD_OPTIONS，options所制定的构建选项无效。
+	CL_INVALID_OPERATION，对于device_list中任一设备而言，之前调用clBuildProgram为program构建所对应的程序执行体的动作还未完成。
+	CL_COMPILER_AVAILABALE，如果是用clCreateProgramWithSource创建的program，但是没有可用的编译器，即CL_DEVICE_COMPILER_AVAILABLE是CL_FALSE
+	CL_BUILD_PROGRAM_FAILURE，构建程序对象失败。如果clBuildProgram没有将此错误返回，则在构建完成时会将其返回。
+	CL_INVALID_OPERATION，有附着到program上的内核对象。
+	CL_INVALID_OPERATION，program不是由clCreateProgramWithSource|Binary创建的。
+	CL_OUT_OF_RESOURCES，为设备上的OpenCL操作分配内存失败。
+	CL_OUT_OF_HOST_MEMORY，为主机上的OpenCL操作分配内存失败。
+*************************************************************************************
+cl_int clGetProgramInfo(cl_program program,
+			cl_program_info param_name,
+			size_t param_value_size,
+			void *param_value,
+			size_t *param_value_size_ret)
+program，所要查看的程序对象。
+param_name，指定所要查看的信息。
+param_value，指向用来存放查询结果的内存。如果为NULL，则忽略。
+param_value_size，param_value所指内存的大小。其值必须大于param_name所指定的返回类型。
+param_value_size_ret，返回查询结果的实际大小。如果为NULL，则忽略。
+clGetProgramInfo所支持的param_name
+	cl_program_info			返回类型
+	CL_PROGRAM_REFERENCE_COUNT	cl_int
+	返回program的引用计数
+	CL_PROGRAM_CONTEXT		cl_context
+	返回创建程序对象时所指的上下文。
+	CL_PROGRAM_NUM_DEVICES		cl_uint
+	返回program所关联的设备数幕
+	CL_PROGRAM_DEVICES		cl_device_id[]
+	返回program所关联的设备。可以是创建程序对象时所用上下文中的设备，也可以使clCreateProgramWithBinary所指定的设备中的一个子集
+	CL_PROGRAM_SOURCE		char[]
+	返回传给clCreateProgramWithSource的程序源码。返回的字符串中将所有的源码串在一起，并以null终止。
+	如果program是用clCreateProgramWithBinary或者clCreateProgramWithBuiltinkernels创建的，可能返回空字符串。或者对应的程序源码，这取决于二进制码中是否有程序源码
+	param_value_size_ret中会返回源码中字符的实际数目，包含null终止字符。
+	CL_PROGRAM_BINARY_SIZES		size_t[]
+	返回一个数组，内含program所关联的所有设备的程序二进制码的大小。数组的大小等于program所关联的设备的个数。如果任一设备没有对应的二进制码，则返回零。
+	如果program是用clCreateProgramWithBuiltinKernels创建的，可能数组中的所有元素都是零。
+	CL_PROGRAM_BINARIES		unsigned char *[]
+	返回一个数组，内涵program所关联的所有设备的二进制码。
+	param_value指向一个包含n个指针的数组，所有指针都有调用者分配，其中n是program所关联的设备的数目。对于每个指针分配多少内存，可以通过CL_PROGRAM_BINARY_SIZE来查询。
+	CL_PROGARM_NUM_KERNELS		size_t
+	返回program中声明的内核总数。对于program所关联的设备来说，至少要为其中之一成功构建了可执行程序对象，然后才能使用此资讯。
+	CL_PROGRAM_KERNEL_NAMES		char []
+	返回program中内核的名字，以分号间隔。对于progarm所关联的设备来说， 至少要为其中之一成功构建了可执行程序对象，然后才能使用此资讯。   
+如果执行成功，clGetProgramInfo会返回CL_SUCCESS，否则返回下列错误码之一：
+	CL_INVALID_VALUE，parma_name无效，或者param_value_size小于param_name的返回类型的大小，且param_value不是NULL。
+	CL_INVALID_PROGRAM，program无效。
+	CL_INVALID_PROGRAM_EXECUTABLE，param_name是CL_PROGRAM_NUM_KERNELS 或者CL_PROGRAM_KERNEL_NAMES,并且在program所关联的设备中至少有一个设备所对应的程序执行体没有成功构建。
+	CL_OUT_OF_RESOURCES，为设备上的OpenCL操作分配内存失败。
+	CL_OUT_OF_HOST_MEMORY，为主机上的OpenCL操作分配内存失败。
+*************************************************************************************
+cl_int clGetProgramBuildInfo (cl_program program,
+			      cl_device_id device,
+			      cl_program_build_info param_name,
+			      size_t param_value_szie,
+			      void *param_value,
+			      size_t *param_value_size_ret)
+program，所要查询的程序对象。
+device，指定要查询那个设备的构建信息。device必须是program所关联的设备。
+param_name，指定要查询什么信息。
+param_value，指向的内存用来存放查询结果。如果为NULL，可以忽略。
+param_value_size，param_size所指向的内存的大小。其值必须大于对应的param_name所返回的类型的大小。
+param_value_size_ret，返回查询结果的实际大小。如果为NULL，则忽略。
+如果执行成功，clGetProgramBuildInfo会返回CL_SUCCESS。否则，返回下列错误吗之一：
+	CL_INVALID_DEVICE，device不是与program相关联的设备。
+	CL_INVALID_VALUE，param_name无效，或者param_value_size小于相应的param_name返回类型的大小，且param_value不是NULL。
+	CL_INVALID_PROGRAM，program无效。
+	CL_OUT_OF_RESOURCES，为设备上的OpenCL操作分配内存失败。
+	CL_OUT_OF_HOST_MEMORY，为主机上的OpenCL操作分配内存失败。
+
+clGetProgramBuildInfo所支持的param_name
+	cl_program_build_info		返回类型
+	CL_PROGRAM_BUILD_STATUS		cl_build_status
+	返回构建、编译或链接的状态，在program上为device最后事实的那个(clBuildProgram、clCompileProgram或clLinkProgram）。可以是下列之一：
+		CL_BUILD_NONE，三个步骤都没有实施。
+		CL_BUILD_ERROR，最后实施的那个出错。
+		CL_BUILD_SUCCESS，最后实施的那个成功。
+		CL_BUILD_IN_PROGRESS，最后实施的那个还未完成。
+	CL_PROGRAM_BUILD_OPTIONS	char[]
+	返回构建、编译或链接的选项，即最后实施的那个的参数options。如果状态是CL_BUILD_NONE，则返回空字串。
+	CL_PROGRAM_BUILD_LOG		char []
+	返回最后实施的那个的日志。如果状态是CL_BUILD_NONE，则返回空字符串。
+	CL_PROGRAM_BINARY_TYPE		cl_program_binary_type
+	返回device所对应的二进制码。可以是下列之一：
+		CL_PROGRAM_BINARY_TYPE_NONE，没有对应的二进制码。
+		CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT，有编译过的二进制码。如果program是使用clCreateProgramWithSource创建并使用clComplieProgram编译的，或者是用clCreateProgramWithBinary装载的编译过的二进制码，都是这种情况。
+		CL_PROGRAM_BINARY_TYPE_LIBRARY，有庫的二元碼。如果用 clLinkProgram 創建 program 時指定了鏈接選項 -create-library，或者是用 clCreateProgramWithBinary 裝載的庫的二元碼，都屬於這種情況。
+		CL_PROGRAM_BINARY_TYPE_EXECUTABLE，有可執行的二元碼。如果用 clLinkProgram 創建 program 時沒有指定鏈接選項 -create-library，或者是用 clCreateProgramWithBinary 裝載的可執行的二元碼，都屬於這種情況。
+*************************************************************************************
+5、创建程序的另一种方法
+cl_program clCreateProgramWithBuiltInKernels(cl_context context,
+					     cl_uint num_devices,
+					     const cl_device_id *device_list,
+					     const char *kernel_names,
+					     cl_int *errcode_ret)
+clCreateProgramWithBuiltInKernels 会创建一个程序对象，并将内建内核的相关资讯装载到此对象中。  
+*************************************************************************************
+6、编译和链接的分离
+编译阶段、链接阶段的分离。编译阶段可以将程序源码编译成二进制目标码，而链接阶段可以将其与其他目标码链接成程序执行体。
+潜入头文件。。对于程序源码所包含的头文件来说，构建选项 -I可以用来指定搜索路径。 也可以在目标码中内嵌头文件的源码。
+库。可以使用连接器将目标码和库连接成程序执行体，或者创建一个新的库。
+cl_int clCompileProgram(cl_program program,
+			cl_uint num_devices,
+			const cl_device_id *device_list,
+			const char *options,
+			cl_uint num_input_headers,
+			const cl_program *input_headers,
+			const char **header_include_names,
+			void (CL_CALLBACK *pfn_notify)(cl_program program,
+						       void *user_data),
+						       void *user_data))
+这个函数是用来编译程序源码的。便以前会记性预处理。编译工作的目标设备是program所关联的所有设备或那些指定的设备。
+*************************************************************************************
+7、编译选项
+预处理选项：
+-D name
+	预定义宏name，其值为1。
+-D name = definition
+	预定义宏name为definition。
+-I dir
+	在头文件搜索路径中包含目录dir
+浮点数选项：
+-cl-single-precision-constant
+	将双精度浮点常数视为单精度浮点常数。
+-cl-demorms-are-zero
+	对于双精度和单精度数，这个选项指定非规格化数可以刷新为零
+-cl-fp32-correctly-rounded-divide-sqrt
+	对于程序源码中的单精度浮点除法和sqrt而言，应用可以使用此选项来保证对它们的正确舍入。
+优化选项：
+-cl-opt-disable
+	禁用所有优化。缺省情况下优化是打开的。
+-cl-mad-enable
+	允许mad代替a*b+c。mad会用较低的精确度来计算a*b+c。
+-cl-no-signed-zeros
+	允许在进行浮点运算时忽略零的正负。
+-cl-unsafe-math-optimizations
+	允许对浮点算术的优化：
+		假定参数和结果都是有效的；
+		可能违反IEEE754的标准
+		可能违反对梵净度浮点数的数值符合性的要求
+	此选项包含了-cl-no-signed-zeros和-cl-mad-enable。
+-cl-finite-math-only
+	在执行浮点算术运算时，可以假定参数和结果不是NAN或这无穷大无穷小。
+-cl-fast-relaxed-math
+	相当于-cl-finite-math-only和-cl-unsafe-math-optimizations的组合。
+请求或抑制警告的选项：
+-w
+	禁止所有的警告信息。
+-Werror
+	把所有警告都当成错误。
+控制OpenCL C版本的选项：
+-cl-std = version
+	确定所使用的OpenCL C语言的版本。
