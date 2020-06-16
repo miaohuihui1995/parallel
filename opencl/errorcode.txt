@@ -1,0 +1,149 @@
+OpenCL错误码
+
+#define CL_SUCCESS                                  0
+#define CL_DEVICE_NOT_FOUND                         -1
+#define CL_DEVICE_NOT_AVAILABLE                     -2
+#define CL_COMPILER_NOT_AVAILABLE                   -3
+#define CL_MEM_OBJECT_ALLOCATION_FAILURE            -4
+#define CL_OUT_OF_RESOURCES                         -5
+#define CL_OUT_OF_HOST_MEMORY                       -6
+#define CL_PROFILING_INFO_NOT_AVAILABLE             -7
+#define CL_MEM_COPY_OVERLAP                         -8
+#define CL_IMAGE_FORMAT_MISMATCH                    -9
+#define CL_IMAGE_FORMAT_NOT_SUPPORTED               -10
+#define CL_BUILD_PROGRAM_FAILURE                    -11
+#define CL_MAP_FAILURE                              -12
+#define CL_MISALIGNED_SUB_BUFFER_OFFSET             -13
+#define CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST -14
+ 
+#define CL_INVALID_VALUE                            -30
+#define CL_INVALID_DEVICE_TYPE                      -31
+#define CL_INVALID_PLATFORM                         -32
+#define CL_INVALID_DEVICE                           -33
+#define CL_INVALID_CONTEXT                          -34
+#define CL_INVALID_QUEUE_PROPERTIES                 -35
+#define CL_INVALID_COMMAND_QUEUE                    -36
+#define CL_INVALID_HOST_PTR                         -37
+#define CL_INVALID_MEM_OBJECT                       -38
+#define CL_INVALID_IMAGE_FORMAT_DESCRIPTOR          -39
+#define CL_INVALID_IMAGE_SIZE                       -40
+#define CL_INVALID_SAMPLER                          -41
+#define CL_INVALID_BINARY                           -42
+#define CL_INVALID_BUILD_OPTIONS                    -43
+#define CL_INVALID_PROGRAM                          -44
+#define CL_INVALID_PROGRAM_EXECUTABLE               -45
+#define CL_INVALID_KERNEL_NAME                      -46
+#define CL_INVALID_KERNEL_DEFINITION                -47
+#define CL_INVALID_KERNEL                           -48
+#define CL_INVALID_ARG_INDEX                        -49
+#define CL_INVALID_ARG_VALUE                        -50
+#define CL_INVALID_ARG_SIZE                         -51
+#define CL_INVALID_KERNEL_ARGS                      -52
+#define CL_INVALID_WORK_DIMENSION                   -53
+#define CL_INVALID_WORK_GROUP_SIZE                  -54
+#define CL_INVALID_WORK_ITEM_SIZE                   -55
+#define CL_INVALID_GLOBAL_OFFSET                    -56
+#define CL_INVALID_EVENT_WAIT_LIST                  -57
+#define CL_INVALID_EVENT                            -58
+#define CL_INVALID_OPERATION                        -59
+#define CL_INVALID_GL_OBJECT                        -60
+#define CL_INVALID_BUFFER_SIZE                      -61
+#define CL_INVALID_MIP_LEVEL                        -62
+#define CL_INVALID_GLOBAL_WORK_SIZE                 -63
+#define CL_INVALID_PROPERTY -64
+
+错误　			描述
+
+CL_SUCCESS　命令成功执行，没有出现错误
+
+CL_DEVICE_NOT_FOUND　未发现与条件匹配的OpenCL设备
+
+CL_DEVICE_NOT_AVAILABLE　OpenCL设备目前不可用
+
+CL_COMPILER_NOT_AVAILABLE　程序由源代码创建，不过没有可用的OpenCL C编译器
+
+CL_MEM_OBJECT_ALLOCATION_FAILURE　无法为内存对象或图像对象分配内存
+
+CL_OUT_OF_RESOURCES　没有足够的资源执行命令
+
+CL_OUT_OF_HOST_MEMORY　宿主机上没有足够的内存执行命令
+
+CL_PROFILING_INFO_NOT_AVAILABLE　无法得到事件的性能评测信息或者命令队列不支持性能评测
+
+CL_MEM_COPY_OVERLAP　两个缓冲区在同一个内存区域重叠
+
+CL_IMAGE_FORMAT_MISMATCH　图像未采用相同的图像格式
+
+CL_IMAGE_FORMAT_NOT_SUPPORTED　不支持指定的图像格式
+
+CL_BUILD_PROGRAM_FAILURE　无法为程序构建可执行代码
+
+CL_MAP_FAILURE　内存区域无法映射到宿主机内存
+
+CL_INVALID_VALUE　命令的一个或多个参数指定了非法值
+
+CL_INVALID_DEVICE_TYPE　传入的设备类型不是合法值
+
+CL_INVALID_PLATFORM　传入的平台不是合法值
+
+CL_INVALID_DEVICE　传入的设备不是合法值
+
+CL_INVALID_CONTEXT　传入的上下文不是合法值
+
+CL_INVALID_QUEUE_PROPERTIES　设备不支持命令队列属性
+
+CL_INVALID_COMMAND_QUEUE　传入的命令队列不是合法值
+
+CL_INVALID_HOST_PTR　宿主机指针不合法
+
+CL_INVALID_MEM_OBJECT　传入的内存对象不是合法值
+
+CL_INVALID_IMAGE_FORMAT_DESCRIPTOR　传入的图像格式描述符不是合法值
+
+CL_INVALID_IMAGE_SIZE　设备不支持这个图像大小
+
+CL_INVALID_SAMPLER　传入的采样工具不是合法值
+
+CL_INVALID_BINARY　传入了非法的二进制程序
+
+CL_INVALID_BUILD_OPTIONS　一个或多个构建选项不合法
+
+CL_INVALID_PROGRAM　传入的程序不是合法值
+
+CL_INVALID_PROGRAM_EXECUTABLE　程序未能成功地构建命令队列关联设备上的一个可执行程序
+
+CL_INVALID_KERNEL_NAME　程序中不存在指定的内核
+
+CL_INVALID_KERNEL_DEFINITION　程序源代码中定义的内核不合法
+
+CL_INVALID_KERNEL　传入的内核不是合法值
+
+CL_INVALID_ARG_INDEX　参数索引指示的参数对于内核不合法
+
+CL_INVALID_ARG_VALUE 　对于一个非局部参数，内核参数值为NULL；或者对于一个局部参数，内核参数值为非NULL
+
+CL_INVALID_ARG_SIZE　参数大小与内核参数不一致
+
+CL_INVALID_KERNEL_ARGS　一个或多个内核参数未赋值
+
+CL_INVALID_WORK_DIMENSION　工作维度值不是介于1～3的一个值
+
+CL_INVALID_WORK_GROUP_SIZE　局部或全局工作组大小不合法
+
+CL_INVALID_WORK_ITEM_SIZE　一个或多个工作项大小超出了设备支持的最大大小
+
+CL_INVALID_GLOBAL_OFFSET　全局偏移量超出了所支持的界限
+
+CL_INVALID_EVENT_WAIT_LIST　提供的等待列表大小不合法或者其中包含非事件
+
+CL_INVALID_EVENT　传入的事件不是一个合法值
+
+CL_INVALID_OPERATION　执行命令导致出现一个不合法的操作
+
+CL_INVALID_GL_OBJECT　OpenGL引用的对象存在问题
+
+CL_INVALID_BUFFER_SIZE　指定的缓冲区大小越界
+
+CL_INVALID_MIP_LEVEL　为OpenGL纹理指定的mipmap级别对于OpenGL对象不合法
+
+CL_INVALID_GLOBAL_WORK_SIZE　传入的全局工作大小不合法，可能为0或者超出了设备支持的大小
